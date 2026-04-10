@@ -1,18 +1,19 @@
 .container-home {
-  min-height: calc(100vh - 80px);
-  background-color: #f5f7fa;
+  min-height: 100vh;
+  background: #f7f4ed;
 
   .content {
     max-width: 28rem;
     margin: 0 auto;
-    background: white;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    padding-bottom: 48px;
 
+    /* 顶部图片 + 标题 */
     .header {
       position: relative;
-      height: 200px;
+      height: 240px;
       overflow: hidden;
+      border-radius: 0 0 36px 36px;
+      margin-bottom: 32px;
 
       .header-image {
         width: 100%;
@@ -25,80 +26,157 @@
         bottom: 0;
         left: 0;
         right: 0;
-        padding: 20px;
-        background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        padding: 24px 32px;
+        background: linear-gradient(to top, rgba(0,0,0,0.72), transparent);
         color: white;
-        font-size: 24px;
-        font-weight: bold;
+        font-size: 40px;
+        font-weight: 900;
+        letter-spacing: 2px;
       }
     }
 
-    .introduction {
-      padding: 24px;
+    /* 通用测试入口卡片 */
+    .test-block {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 32px;
+      padding: 36px 32px 32px;
+      margin: 0 24px 16px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06);
 
-      .section {
-        margin-bottom: 24px;
+      .test-block-title {
+        display: block;
+        font-size: 36px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 12px;
+      }
 
-        &:last-child {
-          margin-bottom: 0;
-        }
-
-        .section-title {
-          display: block;
-          font-size: 18px;
-          font-weight: bold;
-          color: #3b82f6;
-          margin-bottom: 12px;
-        }
-
-        .section-text {
-          display: block;
-          font-size: 14px;
-          line-height: 1.6;
-          color: #4b5563;
-          margin-bottom: 8px;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
+      .test-block-desc {
+        display: block;
+        font-size: 26px;
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 28px;
       }
     }
 
-    .btn-box{
+    /* MBTI 按钮组 */
+    .btn-box {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 32px;
+      gap: 16px;
     }
 
     .start-button {
-      width: 45%;
-      height: 44px;
-      background-color: #3b82f6;
-      color: white;
-      font-size: 16px;
-      font-weight: 500;
-      border-radius: 8px;
-      transition: all 0.2s;
+      flex: 1;
+      height: 80px !important;
+      background: linear-gradient(90deg, #2563eb, #4f46e5) !important;
+      color: #fff !important;
+      font-size: 28px !important;
+      font-weight: 700 !important;
+      border-radius: 16px !important;
+      border: none !important;
 
-      &:active {
-        background-color: #2563eb;
-      }
+      &::after { border: none !important; }
     }
 
     .record-button {
-      width: 45%;
-      height: 44px;
-      color: black;
-      font-size: 16px;
-      font-weight: 500;
-      border-radius: 8px;
-      transition: all 0.2s;
+      flex: 1;
+      height: 80px !important;
+      background: transparent !important;
+      color: #475569 !important;
+      font-size: 28px !important;
+      font-weight: 600 !important;
+      border-radius: 16px !important;
+      border: 1px solid #e2e8f0 !important;
 
-      &:active {
-        background-color: #2563eb;
+      &::after { border: none !important; }
+    }
+
+    /* SBTI 卡片特有 */
+    .sbti-block {
+      background: linear-gradient(
+        135deg,
+        rgba(15, 118, 110, 0.06),
+        rgba(255, 255, 255, 0.92)
+      ) !important;
+    }
+
+    .sbti-new-badge {
+      display: inline-flex;
+      align-items: center;
+      background: #134e4a;
+      border-radius: 100px;
+      padding: 4px 20px;
+      margin-bottom: 14px;
+
+      .sbti-new-text {
+        font-size: 20px;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: 3px;
+      }
+    }
+
+    .sbti-types-hint {
+      display: block;
+      font-size: 24px;
+      color: #94a3b8;
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+
+    .sbti-start-button {
+      width: 100% !important;
+      height: 80px !important;
+      background: linear-gradient(90deg, #0f766e, #c0841e) !important;
+      color: #fff !important;
+      font-size: 30px !important;
+      font-weight: 700 !important;
+      border-radius: 16px !important;
+      border: none !important;
+
+      &::after { border: none !important; }
+    }
+
+    /* 分隔线 */
+    .home-divider {
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      margin: 8px 0;
+
+      .divider-line {
+        flex: 1;
+        height: 1px;
+        background: #e2e8f0;
+      }
+
+      .divider-text {
+        font-size: 24px;
+        color: #94a3b8;
+        padding: 0 20px;
+      }
+    }
+
+    /* 底部提示 */
+    .notice-section {
+      padding: 24px 32px;
+      margin: 0 24px;
+
+      .section-title {
+        display: block;
+        font-size: 24px;
+        font-weight: 700;
+        color: #3b82f6;
+        margin-bottom: 8px;
+      }
+
+      .section-text {
+        display: block;
+        font-size: 24px;
+        line-height: 1.6;
+        color: #94a3b8;
       }
     }
   }

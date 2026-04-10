@@ -5,19 +5,12 @@ import { getStorageSync, navigateTo, setStorageSync } from "@tarojs/taro";
 import { useState } from "react";
 import mbtiQuestions from "src/assets/data/mbti.json";
 import "./index.less";
-import clsx from "clsx";
 import genRecordItem from "src/utils/genRecordItem";
 
 type MBTIQuestion = {
   question: string;
-  choice_a: {
-    value: string;
-    text: string;
-  };
-  choice_b: {
-    value: string;
-    text: string;
-  };
+  choice_a: { value: string; text: string };
+  choice_b: { value: string; text: string };
 };
 
 type Answer = {
@@ -25,34 +18,34 @@ type Answer = {
   value: string;
 };
 
+const OPTION_LABELS = ["A", "B"];
+
 function Test() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
 
-  // 当前问题
   const currentQuestion: MBTIQuestion = mbtiQuestions[currentQuestionIndex];
+  const total = mbtiQuestions.length;
+  const progress = ((currentQuestionIndex + 1) / total) * 100;
 
-  // 选择答案
+  const getCurrentAnswer = () => {
+    const a = answers.find((a) => a.questionIndex === currentQuestionIndex);
+    return a ? a.value : null;
+  };
+
   const handleChoose = (value: string) => {
     const newAnswers = [...answers];
-    const existingAnswerIndex = newAnswers.findIndex(
-      (a) => a.questionIndex === currentQuestionIndex
-    );
-
-    if (existingAnswerIndex !== -1) {
-      newAnswers[existingAnswerIndex].value = value;
+    const idx = newAnswers.findIndex((a) => a.questionIndex === currentQuestionIndex);
+    if (idx !== -1) {
+      newAnswers[idx].value = value;
     } else {
-      newAnswers.push({
-        questionIndex: currentQuestionIndex,
-        value,
-      });
+      newAnswers.push({ questionIndex: currentQuestionIndex, value });
     }
-
     setAnswers(newAnswers);
 
-    // 延迟300毫秒后再进入下一题
+    // 300ms 后自动跳题 / 完成
     setTimeout(() => {
-      if (currentQuestionIndex < mbtiQuestions.length - 1) {
+      if (currentQuestionIndex < total - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
       } else {
         calculateMBTIResult(newAnswers);
@@ -60,156 +53,91 @@ function Test() {
     }, 300);
   };
 
-  // 上一题
   const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
+    if (currentQuestionIndex > 0) setCurrentQuestionIndex(currentQuestionIndex - 1);
   };
 
-  // 下一题
-  const handleNext = () => {
-    if (currentQuestionIndex < mbtiQuestions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-  };
-
-  // 计算MBTI结果
   const calculateMBTIResult = (answers: Answer[]) => {
-    const counts = {
-      E: 0,
-      I: 0,
-      S: 0,
-      N: 0,
-      T: 0,
-      F: 0,
-      J: 0,
-      P: 0,
-    };
-
-    answers.forEach((answer) => {
-      counts[answer.value as keyof typeof counts]++;
-    });
-
+    const counts = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+    answers.forEach((a) => { counts[a.value as keyof typeof counts]++; });
     const result = [
       counts.E > counts.I ? "E" : "I",
       counts.S > counts.N ? "S" : "N",
       counts.T > counts.F ? "T" : "F",
       counts.J > counts.P ? "J" : "P",
     ].join("");
-
-    // 将结果存储到本地
     const record = genRecordItem(result);
     setStorageSync("currentShowTestRecord", record);
-    // 存储记录到本地
     const testRecords = getStorageSync("testRecords") || [];
     setStorageSync("testRecords", [record, ...testRecords]);
-
-    // 计算完结果后跳转到结果页面
-    navigateTo({
-      url: "/pages/result/index",
-    });
+    navigateTo({ url: "/pages/result/index" });
   };
 
-  // 检查当前问题是否已回答
-  const isAnswered = (questionIndex: number) => {
-    return answers.some((a) => a.questionIndex === questionIndex);
-  };
+  const currentAnswer = getCurrentAnswer();
 
-  // 获取当前问题的答案
-  const getCurrentAnswer = () => {
-    const answer = answers.find(
-      (a) => a.questionIndex === currentQuestionIndex
-    );
-    return answer ? answer.value : null;
-  };
+  const choices = [
+    { label: "A", value: currentQuestion.choice_a.value, text: currentQuestion.choice_a.text },
+    { label: "B", value: currentQuestion.choice_b.value, text: currentQuestion.choice_b.text },
+  ];
 
   return (
     <ConfigProvider locale={zhCN}>
-      {/* <Layout current={0}> */}
       <View className="container-index">
         <View className="content">
+          {/* 进度卡片 */}
+          <View className="progress-card">
+            <View className="progress-info">
+              <Text className="progress-text">
+                问题 {currentQuestionIndex + 1} / {total}
+              </Text>
+              <Text className="progress-sub">共 {total} 道题，答完自动跳题</Text>
+            </View>
+            <View className="progress-bar-wrap">
+              <View className="progress-bar">
+                <View className="progress-fill" style={{ width: `${progress}%` }} />
+              </View>
+              <Text className="progress-pct">{Math.round(progress)}%</Text>
+            </View>
+          </View>
+
+          {/* 题目卡片 */}
           <View className="card">
-            <View className="question-container">
-              {/* 进度条 */}
-              <View className="progress">
-                <Text className="progress-text">
-                  问题 {currentQuestionIndex + 1} / {mbtiQuestions.length}
-                </Text>
-                <View className="progress-bar">
-                  <View
-                    className="progress-fill"
-                    style={{
-                      width: `${
-                        ((currentQuestionIndex + 1) / mbtiQuestions.length) *
-                        100
-                      }%`,
-                    }}
-                  />
-                </View>
-              </View>
+            <Text className="question-tag">MBTI 测试</Text>
+            <Text className="question-text">{currentQuestion.question}</Text>
+
+            <View className="choices">
+              {choices.map((choice) => {
+                const isSelected = currentAnswer === choice.value;
+                return (
+                  <Button
+                    key={choice.value}
+                    className={`choice-button${isSelected ? " selected" : ""}`}
+                    onClick={() => handleChoose(choice.value)}
+                  >
+                    <View className="choice-inner">
+                      <View className={`choice-label${isSelected ? " selected" : ""}`}>
+                        <Text>{choice.label}</Text>
+                      </View>
+                      <Text className="choice-text">{choice.text}</Text>
+                    </View>
+                  </Button>
+                );
+              })}
             </View>
 
-            {/* 问题卡片 */}
-            <View className="question-card">
-              <Text className="question-text">{currentQuestion.question}</Text>
-
-              <View className="choices">
-                <Button
-                  onClick={() => handleChoose(currentQuestion.choice_a.value)}
-                  className={clsx("choice-button", {
-                    selected:
-                      getCurrentAnswer() === currentQuestion.choice_a.value,
-                  })}
-                >
-                  <Text className="choice-text">
-                    {currentQuestion.choice_a.text}
-                  </Text>
-                </Button>
-
-                <Button
-                  onClick={() => handleChoose(currentQuestion.choice_b.value)}
-                  className={clsx("choice-button", {
-                    selected:
-                      getCurrentAnswer() === currentQuestion.choice_b.value,
-                  })}
-                >
-                  <Text className="choice-text">
-                    {currentQuestion.choice_b.text}
-                  </Text>
-                </Button>
-              </View>
-            </View>
-
-            {/* 导航按钮 */}
+            {/* 仅保留上一题 */}
             <View className="navigation">
               <Button
+                className="nav-button"
                 disabled={currentQuestionIndex === 0}
                 onClick={handlePrevious}
-                className={clsx("nav-button", "prev")}
               >
                 上一题
-              </Button>
-
-              <Button
-                disabled={
-                  currentQuestionIndex === mbtiQuestions.length - 1 ||
-                  !isAnswered(currentQuestionIndex)
-                }
-                onClick={handleNext}
-                className={clsx("nav-button", "next", {
-                  disabled:
-                    currentQuestionIndex === mbtiQuestions.length - 1 ||
-                    !isAnswered(currentQuestionIndex),
-                })}
-              >
-                下一题
               </Button>
             </View>
           </View>
         </View>
       </View>
-      {/* </Layout> */}
     </ConfigProvider>
   );
 }

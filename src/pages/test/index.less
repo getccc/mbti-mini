@@ -1,153 +1,199 @@
+/* ===== MBTI 测试页 — 与 SBTI 统一风格 ===== */
+
 .container-index {
-  min-height: calc(100vh - 80px);
-  background-color: #f5f7fa;
-  padding: 20px;
+  min-height: 100vh;
+  background: #f7f4ed;
+  padding: 32px 24px 48px;
+  box-sizing: border-box;
 
   .content {
     width: 100%;
     max-width: 28rem;
     margin: 0 auto;
 
-    .card {
-      background-color: white;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      padding: 1.5rem;
+    /* 进度卡片 */
+    .progress-card {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 28px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06);
 
-      .progress {
-        margin-bottom: 1.5rem;
+      .progress-info {
+        margin-bottom: 16px;
+      }
 
-        .progress-text {
-          font-size: 14px;
-          color: #6b7280;
-          margin-bottom: 8px;
-        }
+      .progress-text {
+        display: block;
+        font-size: 22px;
+        font-weight: 700;
+        color: #475569;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+      }
 
-        .progress-bar {
-          width: 100%;
-          height: 8px; // 增加进度条高度
-          background-color: #e5e7eb;
-          border-radius: 9999px;
-          overflow: hidden;
+      .progress-sub {
+        font-size: 22px;
+        color: #94a3b8;
+      }
 
-          .progress-fill {
-            height: 100%;
-            background-color: #3b82f6;
-            transition: width 0.3s ease;
-          }
+      .progress-bar-wrap {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .progress-bar {
+        flex: 1;
+        height: 12px;
+        background: #e2e8f0;
+        border-radius: 100px;
+        overflow: hidden;
+
+        .progress-fill {
+          height: 100%;
+          border-radius: 100px;
+          background: linear-gradient(90deg, #3b82f6, #6366f1);
+          transition: width 0.3s ease;
         }
       }
 
+      .progress-pct {
+        font-size: 24px;
+        font-weight: 700;
+        color: #334155;
+        min-width: 60px;
+        text-align: right;
+      }
+    }
+
+    /* 题目卡片 */
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 36px;
+      padding: 40px 32px;
+      box-shadow: 0 32px 90px rgba(15, 23, 42, 0.08);
+
+      /* 类型标签 */
+      .question-tag {
+        display: inline-flex;
+        border-radius: 100px;
+        padding: 6px 20px;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        background: #eff6ff;
+        border: 1px solid rgba(59, 130, 246, 0.15);
+        color: #1d4ed8;
+        margin-bottom: 32px;
+      }
+
       .question-text {
-        font-size: 16px;
-        line-height: 1.6;
-        color: #1f2937;
-        margin-bottom: 1.5rem;
         display: block;
+        font-size: 36px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.55;
+        margin-bottom: 40px;
         white-space: pre-wrap;
         word-break: break-word;
       }
 
+      /* 选项 */
       .choices {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        gap: 16px;
+        margin-bottom: 40px;
 
         .choice-button {
-          width: 100%;
-          min-height: 48px;
-          padding: 12px 16px;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          background-color: white;
+          width: 100% !important;
+          height: auto !important;
+          min-height: 80px;
+          padding: 0 !important;
+          border-radius: 28px !important;
+          border: 1px solid rgba(0, 0, 0, 0.05) !important;
+          background: #f8fafc !important;
+          text-align: left !important;
           transition: all 0.2s;
-          display: flex;
-          align-items: flex-start;
+
+          &::after {
+            border: none !important;
+          }
 
           &.selected {
-            background-color: #eff6ff;
-            border-color: #3b82f6;
+            border-color: rgba(37, 99, 235, 0.2) !important;
+            background: #eff6ff !important;
+            box-shadow: 0 18px 40px rgba(59, 130, 246, 0.12) !important;
+          }
+
+          .choice-inner {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            padding: 22px 28px;
+          }
+
+          .choice-label {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #fff;
+            color: #334155;
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            &.selected {
+              background: #1d4ed8;
+              color: #fff;
+            }
           }
 
           .choice-text {
-            font-size: 14px;
+            flex: 1;
+            font-size: 28px;
+            color: #1e293b;
             line-height: 1.6;
-            color: #374151;
-            text-align: left;
+            padding-top: 8px;
             white-space: pre-wrap;
             word-break: break-word;
           }
         }
       }
 
+      /* 导航 */
       .navigation {
         display: flex;
-        gap: 1rem;
-        margin-top: 1rem;
+        gap: 16px;
+        align-items: center;
 
         .nav-button {
-          flex: 1;
-          height: 40px;
-          border-radius: 8px;
-          font-size: 14px;
+          height: 72px !important;
+          border-radius: 100px !important;
+          font-size: 26px !important;
+          font-weight: 700 !important;
+          border: 1px solid #e2e8f0 !important;
+          background: transparent !important;
+          color: #475569 !important;
+          padding: 0 32px !important;
 
-          &.prev {
-            background-color: white;
-            border: 1px solid #3b82f6;
-            color: #3b82f6;
-
-            &:disabled {
-              border-color: #e5e7eb;
-              color: #9ca3af;
-            }
+          &::after {
+            border: none !important;
           }
 
-          &.next {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-
-            &.disabled {
-              background-color: #e5e7eb;
-              color: #9ca3af;
-              cursor: not-allowed;
-              opacity: 0.6;
-            }
+          &[disabled] {
+            opacity: 0.45 !important;
+            cursor: not-allowed !important;
           }
-        }
-      }
-
-      &.result {
-        text-align: center;
-        padding: 2rem;
-
-        .title {
-          font-size: 18px;
-          font-weight: bold;
-          color: #3b82f6;
-          margin-bottom: 1rem;
-          line-height: 1.4;
-        }
-
-        .description {
-          font-size: 14px;
-          line-height: 1.6;
-          color: #4b5563;
-          margin-bottom: 2rem;
-          white-space: pre-wrap;
-          word-break: break-word;
-        }
-
-        .restart-button {
-          width: 75%;
-          height: 40px;
-          background-color: #3b82f6;
-          color: white;
-          border-radius: 8px;
-          font-size: 14px;
         }
       }
     }
   }
 }
+
